@@ -1,7 +1,9 @@
-Getting started
-===============
+Getting started with cross compiling
+===================================
 
-Execute the following instructions in your shell.
+**First:** Configure your environment in `arm-none-eabi.cmake`.
+
+Then: Execute the following instructions in your shell.
 
 ```bash
 mkdir build
