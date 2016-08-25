@@ -5,6 +5,13 @@ endif()
 
 project(RELIC C CXX)
 
+if(ARCH STREQUAL ARM)
+    SET(COMMON_FLAGS "-mcpu=cortex-m0 -mthumb -mthumb-interwork -msoft-float -ffunction-sections -fdata-sections -g -fno-common -fmessage-length=0")
+    SET(CMAKE_CXX_FLAGS "${COMMON_FLAGS}")
+    SET(CMAKE_C_FLAGS "${COMMON_FLAGS}")
+    set(LINK " -Wl,-gc-sections --specs=rdimon.specs -lc -lrdimon ")
+endif(OPSYS STREQUAL LINUX)
+
 set(PROJECT_VERSION_MAJOR "0")
 set(PROJECT_VERSION_MINOR "4")
 set(PROJECT_VERSION_PATCH "1")
@@ -302,6 +309,7 @@ if(STBIN)
 	set(LFLAGS "${LFLAGS} -static")
 endif(STBIN)
 
+set(CMAKE_SYSTEM_NAME Generic)
 # Discover the operating system.
 if(CMAKE_SYSTEM_NAME STREQUAL Linux)
 	set(OPSYS "LINUX" CACHE STRING "Operating system")
@@ -369,11 +377,11 @@ if(ARITH STREQUAL "gmp" OR ARITH STREQUAL "gmp-sec")
 	endif(GMP_FOUND)
 endif(ARITH STREQUAL "gmp" OR ARITH STREQUAL "gmp-sec")
 
-set(CMAKE_C_FLAGS "-pipe -std=c99 ${AFLAGS} ${WFLAGS} ${DFLAGS} ${PFLAGS} ${CFLAGS}")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pipe -std=c99 ${AFLAGS} ${WFLAGS} ${DFLAGS} ${PFLAGS} ${CFLAGS}")
 set(CMAKE_EXE_LINKER_FLAGS ${LFLAGS})
 
 message(STATUS "Compiler flags: ${CMAKE_C_FLAGS}")
-message(STATUS "Linker flags: ${LFLAGS}")
+message(STATUS "Linker flags: ${CMAKE_EXE_LINKER_FLAGS}")
 
 string(TOUPPER ${ARITH} ARITH)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/include/relic_conf.h.in
